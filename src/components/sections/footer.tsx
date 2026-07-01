@@ -1,12 +1,13 @@
 "use client";
 
 import { AtSign, Globe2, Mail, MapPin, Phone, PlaneTakeoff, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FeedbackRatingModal } from "@/components/ui/feedback-rating-modal";
 import { PHONE_DISPLAY, PHONE_TEL } from "@/lib/contact";
+import { ROUTES } from "@/lib/routes";
+import { cn } from "@/lib/utils";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
+  { label: "About", href: ROUTES.about },
   { label: "Destinations", href: "/#destinations" },
   { label: "Tours", href: "/#tours" },
   { label: "Why Us", href: "/#why-us" },
@@ -14,25 +15,46 @@ const QUICK_LINKS = [
   { label: "Airlines", href: "/#airlines" },
 ];
 
-const DESTINATIONS = ["Edinburgh", "Barcelona", "Dubai", "Paris", "Rome", "New York"];
+const LEGAL_LINKS = [
+  { label: "Privacy Policy", href: ROUTES.privacyPolicy },
+  { label: "Terms & Conditions", href: ROUTES.termsAndConditions },
+  { label: "Refunds & Cancellations", href: ROUTES.refundAndCancellationPolicy },
+  { label: "Disclaimer", href: ROUTES.disclaimer },
+  { label: "Cookie Policy", href: ROUTES.cookiePolicy },
+];
+
+const FOOTER_HEADING_CLASS =
+  "mb-4 font-display text-xs font-semibold uppercase tracking-[0.14em] text-cloud after:mt-2.5 after:block after:h-0.5 after:w-9 after:rounded-full after:bg-kingfisher/70";
+
+const FOOTER_HEADING_MOBILE_CENTER = cn(
+  FOOTER_HEADING_CLASS,
+  "after:mx-auto sm:after:mx-0"
+);
+
+const FOOTER_COLUMN_MOBILE_CENTER = "text-center sm:text-left";
 
 export function Footer() {
   return (
     <footer className="border-t border-white/10 bg-ink text-cloud">
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_0.8fr_1.1fr]">
-          <div>
-            <a href="/" className="mb-4 flex items-center gap-2">
+          <div className={FOOTER_COLUMN_MOBILE_CENTER}>
+            <a
+              href="/"
+              className="mb-4 flex items-center justify-center gap-2 sm:justify-start"
+            >
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-kingfisher text-white">
                 <PlaneTakeoff className="h-4 w-4 -rotate-12" />
               </span>
               <span className="font-display text-xl font-semibold">Skyward</span>
             </a>
-            <p className="max-w-xs text-sm leading-relaxed text-cloud/55">
-              The UK&apos;s honest fare board — compare every airline, book
-              tours, and fly with a team who answers the phone.
+            <p className="mx-auto max-w-sm text-sm leading-relaxed text-cloud/55 sm:mx-0">
+              Get A Ticket is an independent travel agency and travel booking
+              assistance provider. We are not affiliated with, endorsed by, or
+              associated with any airline, hotel chain, travel supplier, or
+              travel brand unless expressly stated otherwise.
             </p>
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-6 flex items-center justify-center gap-3 sm:justify-start">
               {[Globe2, Share2, AtSign].map((Icon, i) => (
                 <a
                   key={i}
@@ -46,10 +68,8 @@ export function Footer() {
             </div>
           </div>
 
-          <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wide text-cloud/45">
-              Quick links
-            </h4>
+          <div className={FOOTER_COLUMN_MOBILE_CENTER}>
+            <h4 className={FOOTER_HEADING_MOBILE_CENTER}>Quick links</h4>
             <ul className="flex flex-col gap-3 text-sm text-cloud/65">
               {QUICK_LINKS.map((l) => (
                 <li key={l.href}>
@@ -61,79 +81,40 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wide text-cloud/45">
-              Destinations
-            </h4>
+          <div className={FOOTER_COLUMN_MOBILE_CENTER}>
+            <h4 className={FOOTER_HEADING_MOBILE_CENTER}>Legal</h4>
             <ul className="flex flex-col gap-3 text-sm text-cloud/65">
-              {DESTINATIONS.map((d) => (
-                <li key={d}>
-                  <a href="#destinations" className="transition-colors hover:text-kingfisher">
-                    {d}
+              {LEGAL_LINKS.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="transition-colors hover:text-kingfisher">
+                    {link.label}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wide text-cloud/45">
-              Stay in the loop
-            </h4>
-            <ul className="mb-5 flex flex-col gap-3 text-sm text-cloud/65">
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-kingfisher" /> 14 Skyline Way, London EC1
+          <div className={FOOTER_COLUMN_MOBILE_CENTER}>
+            <h4 className={FOOTER_HEADING_MOBILE_CENTER}>Stay in the loop</h4>
+            <ul className="flex flex-col gap-3 text-sm text-cloud/65">
+              <li className="flex items-center justify-center gap-2 sm:justify-start">
+                <MapPin className="h-4 w-4 shrink-0 text-kingfisher" /> 14 Skyline Way, London EC1
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-kingfisher" />
+              <li className="flex items-center justify-center gap-2 sm:justify-start">
+                <Phone className="h-4 w-4 shrink-0 text-kingfisher" />
                 <a href={`tel:${PHONE_TEL}`} className="transition-colors hover:text-kingfisher">
                   {PHONE_DISPLAY}
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-kingfisher" /> hello@skyward.co.uk
+              <li className="flex items-center justify-center gap-2 sm:justify-start">
+                <Mail className="h-4 w-4 shrink-0 text-kingfisher" /> hello@skyward.co.uk
               </li>
             </ul>
-            <form
-              className="flex items-center gap-2"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input
-                type="email"
-                required
-                placeholder="Your email"
-                className="w-full rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-cloud placeholder:text-cloud/40 outline-none focus:border-kingfisher"
-              />
-              <Button type="submit" variant="primary" size="sm" className="shrink-0">
-                Join
-              </Button>
-            </form>
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-cloud/40 sm:flex-row">
+        <div className="mt-14 border-t border-white/10 pt-6 text-center text-xs text-cloud/40">
           <p>© {new Date().getFullYear()} Skyward Travel Ltd. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <a href="#" className="transition-colors hover:text-cloud/70">
-              Privacy Policy
-            </a>
-            <a href="#" className="transition-colors hover:text-cloud/70">
-              Terms of Service
-            </a>
-            <a href="#" className="transition-colors hover:text-cloud/70">
-              ATOL Protection
-            </a>
-            <FeedbackRatingModal
-              trigger={
-                <button
-                  type="button"
-                  className="transition-colors hover:text-cloud/70"
-                >
-                  Give feedback
-                </button>
-              }
-            />
-          </div>
         </div>
       </div>
     </footer>
