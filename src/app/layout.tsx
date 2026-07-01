@@ -62,7 +62,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-GB" className={cn("font-sans", geist.variable)}>
-      <body className="antialiased bg-cloud text-ink">
+      <body className="antialiased bg-cloud text-ink" suppressHydrationWarning>
         <Navbar />
         {children}
       </body>

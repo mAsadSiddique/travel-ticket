@@ -106,7 +106,11 @@ export function Navbar() {
     : (NAV_SECTIONS.find((l) => l.id === activeSection)?.hash ?? "");
 
   const desktopIndicator = useSlidingIndicator(activeKey, desktopNavRef);
-  const mobileIndicator = useSlidingIndicator(activeKey, mobileNavRef);
+  const {
+    rect: mobileRect,
+    register: registerMobile,
+    measure: measureMobile,
+  } = useSlidingIndicator(activeKey, mobileNavRef);
 
   const releaseNavigationLock = useCallback(() => {
     isNavigatingRef.current = false;
@@ -204,10 +208,10 @@ export function Navbar() {
 
   useLayoutEffect(() => {
     if (!open) return;
-    mobileIndicator.measure();
-    const frame = requestAnimationFrame(mobileIndicator.measure);
+    measureMobile();
+    const frame = requestAnimationFrame(measureMobile);
     return () => cancelAnimationFrame(frame);
-  }, [open, activeKey, mobileIndicator]);
+  }, [open, activeKey, measureMobile]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -339,9 +343,9 @@ export function Navbar() {
                   className="nav-mobile-indicator"
                   aria-hidden
                   style={{
-                    transform: `translate3d(0, ${mobileIndicator.rect.y}px, 0)`,
-                    height: mobileIndicator.rect.height,
-                    opacity: mobileIndicator.rect.visible ? 1 : 0,
+                    transform: `translate3d(0, ${mobileRect.y}px, 0)`,
+                    height: mobileRect.height,
+                    opacity: mobileRect.visible ? 1 : 0,
                   }}
                 />
                 {NAV_SECTIONS.map((l) => (
@@ -350,7 +354,7 @@ export function Navbar() {
                     id={l.id}
                     label={l.label}
                     active={!isAboutPage && activeSection === l.id}
-                    register={mobileIndicator.register}
+                    register={registerMobile}
                     onSelect={handleSectionSelect}
                     className="nav-mobile-tab w-full text-left"
                   />
@@ -359,7 +363,7 @@ export function Navbar() {
                   href={ROUTES.about}
                   label="About"
                   active={isAboutPage}
-                  register={mobileIndicator.register}
+                  register={registerMobile}
                   onNavigate={closeMenu}
                   className="nav-mobile-tab w-full text-left"
                 />

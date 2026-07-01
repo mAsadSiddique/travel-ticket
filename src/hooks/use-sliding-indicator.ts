@@ -25,6 +25,16 @@ const HIDDEN_INDICATOR: IndicatorRect = {
   visible: false,
 };
 
+function rectsEqual(a: IndicatorRect, b: IndicatorRect) {
+  return (
+    a.x === b.x &&
+    a.y === b.y &&
+    a.width === b.width &&
+    a.height === b.height &&
+    a.visible === b.visible
+  );
+}
+
 export function useSlidingIndicator(
   activeKey: string,
   containerRef: RefObject<HTMLElement | null>
@@ -32,10 +42,14 @@ export function useSlidingIndicator(
   const itemRefs = useRef(new Map<string, HTMLElement>());
   const [rect, setRect] = useState<IndicatorRect>(HIDDEN_INDICATOR);
 
+  const commitRect = useCallback((next: IndicatorRect) => {
+    setRect((prev) => (rectsEqual(prev, next) ? prev : next));
+  }, []);
+
   const measure = useCallback(() => {
     const container = containerRef.current;
     if (!container || !activeKey) {
-      setRect(HIDDEN_INDICATOR);
+      commitRect(HIDDEN_INDICATOR);
       return;
     }
 
@@ -45,14 +59,14 @@ export function useSlidingIndicator(
     const containerBox = container.getBoundingClientRect();
     const itemBox = item.getBoundingClientRect();
 
-    setRect({
+    commitRect({
       x: itemBox.left - containerBox.left,
       y: itemBox.top - containerBox.top,
       width: itemBox.width,
       height: itemBox.height,
       visible: true,
     });
-  }, [activeKey, containerRef]);
+  }, [activeKey, commitRect, containerRef]);
 
   useLayoutEffect(() => {
     measure();
