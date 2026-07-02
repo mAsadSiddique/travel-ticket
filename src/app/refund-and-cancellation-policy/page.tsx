@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { LegalDocument } from "@/components/legal/legal-document";
-import { Footer } from "@/components/sections/footer";
-import { refundAndCancellationPolicy } from "@/content/refund-and-cancellation-policy";
-import { createPageMetadata } from "@/lib/site";
-import { ROUTES } from "@/lib/routes";
+import { Footer } from "@/layout/footer";
+import { ROUTES } from "@/constant/routes";
+import { LegalDocument } from "@/view/legal/legal-document";
+import { createPageMetadata } from "@/constant/site-meta-data";
+import { refundAndCancellationPolicy } from "@/constant/content/refund-and-cancellation-policy";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Refund & Cancellation Policy",

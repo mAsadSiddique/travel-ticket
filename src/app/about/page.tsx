@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { AboutPageContent } from "@/components/about/about-page-content";
-import { Footer } from "@/components/sections/footer";
-import { createPageMetadata } from "@/lib/site";
-import { ROUTES } from "@/lib/routes";
+import { Footer } from "@/layout/footer";
+import { ROUTES } from "@/constant/routes";
+import { createPageMetadata } from "@/constant/site-meta-data";
+import { AboutPageContent } from "@/view/about/about-page-content";
 
 export const metadata: Metadata = createPageMetadata({
   title: "About Us",

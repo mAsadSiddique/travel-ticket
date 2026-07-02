@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HomePage } from "@/components/home/home-page";
+import { HomePage } from "@/view/home/home-page";
 import {
   DEFAULT_PAGE_TITLE,
   SITE_DESCRIPTION,
@@ -7,7 +7,7 @@ import {
   SITE_NAME,
   SITE_TAGLINE,
   SITE_URL,
-} from "@/lib/site";
+} from "@/constant/site-meta-data";
 
 export const metadata: Metadata = {
   title: DEFAULT_PAGE_TITLE,

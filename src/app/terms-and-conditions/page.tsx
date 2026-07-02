@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { LegalDocument } from "@/components/legal/legal-document";
-import { Footer } from "@/components/sections/footer";
-import { termsAndConditions } from "@/content/terms-and-conditions";
-import { createPageMetadata } from "@/lib/site";
-import { ROUTES } from "@/lib/routes";
+import { Footer } from "@/layout/footer";
+import { ROUTES } from "@/constant/routes";
+import { LegalDocument } from "@/view/legal/legal-document";
+import { createPageMetadata } from "@/constant/site-meta-data";
+import { termsAndConditions } from "@/constant/content/terms-and-conditions";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Terms & Conditions",

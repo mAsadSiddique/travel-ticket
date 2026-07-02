@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { LegalDocument } from "@/components/legal/legal-document";
-import { Footer } from "@/components/sections/footer";
-import { privacyPolicy } from "@/content/privacy-policy";
-import { createPageMetadata } from "@/lib/site";
-import { ROUTES } from "@/lib/routes";
+import { Footer } from "@/layout/footer";
+import { ROUTES } from "@/constant/routes";
+import { LegalDocument } from "@/view/legal/legal-document";
+import { createPageMetadata } from "@/constant/site-meta-data";
+import { privacyPolicy } from "@/constant/content/privacy-policy";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy Policy",

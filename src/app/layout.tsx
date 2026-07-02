@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/sections/navbar";
+import { Navbar } from "@/layout/navbar";
 import {
   DEFAULT_PAGE_TITLE,
   SITE_DESCRIPTION,
@@ -8,10 +8,10 @@ import {
   SITE_OG_IMAGE,
   SITE_TAGLINE,
   SITE_URL,
-} from "@/lib/site";
+} from "@/constant/site-meta-data";
 import "./globals.css";
 import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
