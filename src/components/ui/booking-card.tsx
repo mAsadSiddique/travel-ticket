@@ -2,18 +2,21 @@
 
 import * as Tabs from "@radix-ui/react-tabs";
 import * as Select from "@radix-ui/react-select";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeftRight, Check, ChevronDown, Search, Sparkle } from "lucide-react";
+import { ArrowLeftRight, Check, ChevronDown, Search } from "lucide-react";
 import { airports } from "@/constant/location-data";
 import { AirportCombobox } from "@/components/elements/airport-combobox";
 import { DateField, todayLocalISO } from "@/components/elements/date-field";
 import { PassengerSelector, type PassengerCounts } from "@/components/elements/passenger-selector";
 import { Button } from "@/components/elements/button";
 import { useSlidingIndicator } from "@/hooks/use-sliding-indicator";
+import { buildContactSearchUrl } from "@/utils/contact-redirect";
 
 const CABIN_OPTIONS = ["Economy", "Premium Economy", "Business"];
 
 export function BookingCard() {
+  const router = useRouter();
   const [tripType, setTripType] = useState<"return" | "oneway">("return");
   const [origin, setOrigin] = useState(airports[0]);
   const [destination, setDestination] = useState(airports[10]);
@@ -25,7 +28,6 @@ export function BookingCard() {
     infants: 0,
   });
   const [cabin, setCabin] = useState(CABIN_OPTIONS[0]);
-  const [submitted, setSubmitted] = useState(false);
   const tripTabsRef = useRef<HTMLDivElement>(null);
   const tripIndicator = useSlidingIndicator(tripType, tripTabsRef);
 
@@ -38,6 +40,25 @@ export function BookingCard() {
   function swap() {
     setOrigin(destination);
     setDestination(origin);
+  }
+
+  function handleSearch() {
+    const passengerCount =
+      passengers.adults + passengers.children + passengers.infants;
+
+    router.push(
+      buildContactSearchUrl({
+        fromCode: origin.code,
+        fromCity: origin.city,
+        toCode: destination.code,
+        toCity: destination.city,
+        departDate,
+        returnDate: tripType === "return" ? returnDate : undefined,
+        tripType,
+        passengers: passengerCount,
+        cabin,
+      })
+    );
   }
 
   return (
@@ -162,20 +183,11 @@ export function BookingCard() {
           type="button"
           size="lg"
           variant="primary"
-          onClick={() => setSubmitted(true)}
+          onClick={handleSearch}
           className="h-11 w-full text-base"
         >
           <Search className="h-5 w-5" /> Search Flights
         </Button>
-
-        {submitted && (
-          <p className="flex items-center gap-2 text-center text-xs text-ink/55">
-            <Sparkle className="h-3.5 w-3.5 text-kingfisher" />
-            Showing {cabin.toLowerCase()} fares, {origin.code} → {destination.code},{" "}
-            {passengers.adults + passengers.children + passengers.infants} passenger
-            {passengers.adults + passengers.children + passengers.infants !== 1 ? "s" : ""} — this is a design preview, connect a fares API to go live.
-          </p>
-        )}
       </Tabs.Root>
     </div>
   );

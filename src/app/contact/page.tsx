@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Footer } from "@/layout/footer";
 import { ROUTES } from "@/constant/routes";
 import { createPageMetadata } from "@/constant/site-meta-data";
@@ -14,7 +15,9 @@ export const metadata: Metadata = createPageMetadata({
 export default function ContactPage() {
   return (
     <>
-      <ContactPageContent />
+      <Suspense fallback={null}>
+        <ContactPageContent />
+      </Suspense>
       <Footer />
     </>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +11,7 @@ import {
 import { Button } from "@/components/elements/button";
 import { Input } from "@/components/elements/input";
 import { DateField, todayLocalISO } from "@/components/elements/date-field";
-import { scrollToSection } from "@/utils/scroll";
+import { buildContactSearchUrl } from "@/utils/contact-redirect";
 import type { Destination, Tour } from "@/constant/location-data";
 
 type DestinationSearchModalProps = {
@@ -26,6 +27,7 @@ export function DestinationSearchModal({
   destination = null,
   tour = null,
 }: DestinationSearchModalProps) {
+  const router = useRouter();
   const [departure, setDeparture] = useState("");
   const [destinationQuery, setDestinationQuery] = useState("");
   const [travelDate, setTravelDate] = useState(() => todayLocalISO());
@@ -54,7 +56,16 @@ export function DestinationSearchModal({
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onOpenChange(false);
-    scrollToSection("search");
+
+    router.push(
+      buildContactSearchUrl({
+        fromLabel: departure,
+        toLabel: destinationQuery,
+        departDate: travelDate,
+        returnDate,
+        tripType: "return",
+      })
+    );
   };
 
   if (!open) return null;

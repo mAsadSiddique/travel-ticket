@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent, type ReactNode } from "react";
-import { Clock3, Mail, MapPin, Phone } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { Clock3, Info, Mail, MapPin, Phone } from "lucide-react";
 import { BlurFade } from "@/components/elements/blur-fade";
 import { Button } from "@/components/elements/button";
 import { Input } from "@/components/elements/input";
@@ -10,6 +11,11 @@ import { Textarea } from "@/components/elements/textarea";
 import { ADDRESS, EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/constant/contact";
 import { ROUTES } from "@/constant/routes";
 import { cn } from "@/utils/utils";
+import {
+  buildEnquiryMessage,
+  buildEnquirySubject,
+  parseFlightSearchEnquiry,
+} from "@/utils/contact-redirect";
 
 function FormField({
   label,
@@ -69,9 +75,21 @@ function AmbientBackground() {
 }
 
 export function ContactPageContent() {
+  const searchParams = useSearchParams();
+  const searchEnquiry = useMemo(
+    () => parseFlightSearchEnquiry(searchParams),
+    [searchParams]
+  );
+
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [subject, setSubject] = useState(
+    () => (searchEnquiry ? buildEnquirySubject(searchEnquiry) : "")
+  );
+  const [message, setMessage] = useState(
+    () => (searchEnquiry ? buildEnquiryMessage(searchEnquiry) : "")
+  );
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -148,7 +166,30 @@ export function ContactPageContent() {
           </header>
         </BlurFade>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)] lg:gap-10">
+        {searchEnquiry && (
+          <BlurFade delay={0.04}>
+            <div
+              className="mt-8 flex gap-4 rounded-2xl border border-kingfisher/20 bg-gradient-to-r from-kingfisher/[0.08] via-white to-kingfisher/[0.04] p-5 sm:p-6"
+              role="status"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-kingfisher/10 text-kingfisher ring-1 ring-kingfisher/15">
+                <Info className="h-5 w-5" strokeWidth={1.75} />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-semibold text-ink sm:text-xl">
+                  Online route search is not available yet
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-ink/70 sm:text-base">
+                  The route you searched for is not currently available to book online. Please
+                  contact us with your travel details and our team will help you find the best
+                  options for your trip.
+                </p>
+              </div>
+            </div>
+          </BlurFade>
+        )}
+
+        <div className={cn("grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)] lg:gap-10", searchEnquiry ? "mt-8" : "mt-12")}>
           <BlurFade delay={0.05}>
             <section className="rounded-[1.75rem] border border-line bg-white p-6 shadow-[0_20px_60px_-40px_rgba(12,40,71,0.35)] sm:p-8">
               <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
@@ -229,6 +270,8 @@ export function ContactPageContent() {
                       name="subject"
                       type="text"
                       required
+                      value={subject}
+                      onChange={(event) => setSubject(event.target.value)}
                       placeholder="Subject"
                     />
                   </FormField>
@@ -238,6 +281,8 @@ export function ContactPageContent() {
                       id="message"
                       name="message"
                       required
+                      value={message}
+                      onChange={(event) => setMessage(event.target.value)}
                       placeholder="Message"
                     />
                   </FormField>
