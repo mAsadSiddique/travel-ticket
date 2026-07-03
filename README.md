@@ -1,4 +1,4 @@
-# Skyward — UK Travel Agency Landing Page
+# Get A Ticket — UK Travel Agency Website
 
 A premium Next.js 16 + Tailwind v4 landing page for a UK flight & tours booking agency.
 

@@ -17,7 +17,7 @@ export function Testimonials() {
         <BlurFade>
           <SectionHeader
             title="Happy customers"
-            description="Trusted by travellers across the UK — every review comes from someone who actually booked through Skyward."
+            description="Trusted by travellers across the UK — every review comes from someone who actually booked through Get A Ticket."
           />
         </BlurFade>
 

@@ -95,9 +95,9 @@ export type Testimonial = {
 
 export const testimonials: Testimonial[] = [
   { name: "Sophie Turner", location: "Manchester, UK", rating: 5, quote: "Booked our family trip to Lisbon in under five minutes. The passenger selector made adding the kids painless, and the price was exactly what we saw at checkout.", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop" },
-  { name: "James Whitfield", location: "Leeds, UK", rating: 5, quote: "Skyward found a Jet2 fare that beat every comparison site I'd tried that week. Genuinely the easiest booking flow I've used.", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop" },
+  { name: "James Whitfield", location: "Leeds, UK", rating: 5, quote: "Get A Ticket found a Jet2 fare that beat every comparison site I'd tried that week. Genuinely the easiest booking flow I've used.", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop" },
   { name: "Amara Okafor", location: "London, UK", rating: 4, quote: "The Highland tour was beautifully organised — clear itinerary, great guides, and support replied within minutes when our connecting flight shifted.", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop" },
-  { name: "Tom Reilly", location: "Bristol, UK", rating: 5, quote: "Return flights to Dubai for the whole family, infant seat sorted, no hidden fees. Will absolutely use Skyward again.", avatar: "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?q=80&w=1200&auto=format&fit=crop" },
+  { name: "Tom Reilly", location: "Bristol, UK", rating: 5, quote: "Return flights to Dubai for the whole family, infant seat sorted, no hidden fees. Will absolutely use Get A Ticket again.", avatar: "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?q=80&w=1200&auto=format&fit=crop" },
   { name: "Priya Shah", location: "Birmingham, UK", rating: 5, quote: "Loved being able to compare every UK airline in one search instead of opening ten tabs. Saved both time and money.", avatar: "https://images.unsplash.com/photo-1524267213992-b76e8577d046?q=80&w=1200&auto=format&fit=crop" },
 ];
 

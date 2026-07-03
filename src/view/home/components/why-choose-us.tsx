@@ -34,7 +34,7 @@ const FEATURES = [
   {
     icon: UserCheck,
     title: "Verified reviews",
-    text: "Every review comes from a traveller who actually booked through Skyward — no exceptions.",
+    text: "Every review comes from a traveller who actually booked through Get A Ticket — no exceptions.",
   },
   {
     icon: Sparkles,

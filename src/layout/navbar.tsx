@@ -101,9 +101,13 @@ export function Navbar() {
 
   const isHomePage = pathname === "/";
   const isAboutPage = pathname === ROUTES.about;
+  const isContactPage = pathname === ROUTES.contact;
+  const isStandalonePage = isAboutPage || isContactPage;
   const activeKey = isAboutPage
     ? ROUTES.about
-    : (NAV_SECTIONS.find((l) => l.id === activeSection)?.hash ?? "");
+    : isContactPage
+      ? ROUTES.contact
+      : (NAV_SECTIONS.find((l) => l.id === activeSection)?.hash ?? "");
 
   const desktopIndicator = useSlidingIndicator(activeKey, desktopNavRef);
   const {
@@ -296,7 +300,7 @@ export function Navbar() {
               key={l.id}
               id={l.id}
               label={l.label}
-              active={!isAboutPage && activeSection === l.id}
+              active={!isStandalonePage && activeSection === l.id}
               register={desktopIndicator.register}
               onSelect={handleSectionSelect}
               className="nav-tab"
@@ -306,6 +310,13 @@ export function Navbar() {
             href={ROUTES.about}
             label="About"
             active={isAboutPage}
+            register={desktopIndicator.register}
+            className="nav-tab"
+          />
+          <NavPageLink
+            href={ROUTES.contact}
+            label="Contact"
+            active={isContactPage}
             register={desktopIndicator.register}
             className="nav-tab"
           />
@@ -353,7 +364,7 @@ export function Navbar() {
                     key={l.id}
                     id={l.id}
                     label={l.label}
-                    active={!isAboutPage && activeSection === l.id}
+                    active={!isStandalonePage && activeSection === l.id}
                     register={registerMobile}
                     onSelect={handleSectionSelect}
                     className="nav-mobile-tab w-full text-left"
@@ -363,6 +374,14 @@ export function Navbar() {
                   href={ROUTES.about}
                   label="About"
                   active={isAboutPage}
+                  register={registerMobile}
+                  onNavigate={closeMenu}
+                  className="nav-mobile-tab w-full text-left"
+                />
+                <NavPageLink
+                  href={ROUTES.contact}
+                  label="Contact"
+                  active={isContactPage}
                   register={registerMobile}
                   onNavigate={closeMenu}
                   className="nav-mobile-tab w-full text-left"

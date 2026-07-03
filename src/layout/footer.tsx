@@ -2,13 +2,15 @@
 
 import { AtSign, Globe2, Mail, MapPin, Phone, Share2 } from "lucide-react";
 import { FooterLogo } from "@/components/elements/logo";
-import { PHONE_DISPLAY, PHONE_TEL } from "@/constant/contact";
+import { ADDRESS, EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/constant/contact";
+import { SITE_NAME } from "@/constant/site-meta-data";
 import { ROUTES } from "@/constant/routes";
 import { cn } from "@/utils/utils";
 
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: ROUTES.about },
+  { label: "Contact", href: ROUTES.contact },
   { label: "Destinations", href: "/#destinations" },
   { label: "Tours", href: "/#tours" },
   { label: "Why Us", href: "/#why-us" },
@@ -95,7 +97,7 @@ export function Footer() {
             <h4 className={FOOTER_HEADING_MOBILE_CENTER}>Stay in the loop</h4>
             <ul className="flex flex-col gap-3 text-sm text-cloud/65">
               <li className="flex items-center justify-center gap-2 sm:justify-start">
-                <MapPin className="h-4 w-4 shrink-0 text-kingfisher" /> 14 Skyline Way, London EC1
+                <MapPin className="h-4 w-4 shrink-0 text-kingfisher" /> {ADDRESS}
               </li>
               <li className="flex items-center justify-center gap-2 sm:justify-start">
                 <Phone className="h-4 w-4 shrink-0 text-kingfisher" />
@@ -104,14 +106,17 @@ export function Footer() {
                 </a>
               </li>
               <li className="flex items-center justify-center gap-2 sm:justify-start">
-                <Mail className="h-4 w-4 shrink-0 text-kingfisher" /> hello@skyward.co.uk
+                <Mail className="h-4 w-4 shrink-0 text-kingfisher" />
+                <a href={`mailto:${EMAIL}`} className="transition-colors hover:text-kingfisher">
+                  {EMAIL}
+                </a>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-14 border-t border-white/10 pt-6 text-center text-xs text-cloud/40">
-          <p>© {new Date().getFullYear()} Skyward Travel Ltd. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
         </div>
       </div>
     </footer>

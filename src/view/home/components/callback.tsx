@@ -54,7 +54,7 @@ export function Callback() {
                   className="mt-10 rounded-2xl border border-kingfisher/30 bg-kingfisher/10 px-5 py-4 text-sm leading-relaxed text-cloud/85"
                   role="status"
                 >
-                  Thanks — we&apos;ve got your details. A Skyward planner will be
+                  Thanks — we&apos;ve got your details. A Get A Ticket planner will be
                   in touch shortly.
                 </div>
               ) : (

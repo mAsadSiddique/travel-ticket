@@ -61,7 +61,7 @@ export function FeedbackRatingModal({
       open={open}
       onOpenChange={setOpen}
       trigger={trigger}
-      title="Help us improve Skyward for you"
+      title="Help us improve Get A Ticket for you"
       size="md"
       footer={
         <>
@@ -77,7 +77,7 @@ export function FeedbackRatingModal({
       >
         <fieldset className="space-y-4">
           <legend className="text-sm leading-none font-medium text-ink">
-            How would you describe your experience booking with Skyward today?
+            How would you describe your experience booking with Get A Ticket today?
           </legend>
           <RadioGroup
             className="flex gap-1.5"
@@ -123,7 +123,7 @@ export function FeedbackRatingModal({
             onCheckedChange={(checked) => setConsent(checked === true)}
           />
           <Label htmlFor={`${id}-terms`} className="font-normal text-ink/70">
-            I consent to Skyward contacting me based on my feedback
+            I consent to Get A Ticket contacting me based on my feedback
           </Label>
         </div>
       </form>

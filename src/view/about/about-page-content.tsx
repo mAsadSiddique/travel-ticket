@@ -20,7 +20,7 @@ import { BlurFade } from "@/components/elements/blur-fade";
 import { BentoGrid, BentoGridItem } from "@/components/elements/bento-grid";
 import { SectionHeader } from "@/components/elements/section-header";
 import { aboutUs, SERVICE_ITEMS, WHY_CHOOSE_ITEMS } from "@/constant/content/about-us";
-import { PHONE_DISPLAY, PHONE_TEL } from "@/constant/contact";
+import { EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/constant/contact";
 import { ROUTES } from "@/constant/routes";
 import { cn } from "@/utils/utils";
 
@@ -215,7 +215,7 @@ function CommitmentSupportSection({
 
             <div className="relative mt-10 flex flex-col gap-3 sm:flex-row">
               <a
-                href="mailto:hello@skyward.co.uk"
+                href={`mailto:${EMAIL}`}
                 className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 text-sm font-semibold text-cloud transition-colors hover:border-kingfisher-light/40 hover:bg-white/10 sm:flex-none"
               >
                 <Mail className="h-4 w-4" />
