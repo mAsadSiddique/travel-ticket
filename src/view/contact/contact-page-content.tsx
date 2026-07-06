@@ -3,9 +3,16 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { Clock3, Info, Mail, MapPin, Phone } from "lucide-react";
+import { CheckCircle2, Clock3, Info, Mail, MapPin, Phone } from "lucide-react";
 import { BlurFade } from "@/components/elements/blur-fade";
 import { Button } from "@/components/elements/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/elements/dialog";
 import { Input } from "@/components/elements/input";
 import { Textarea } from "@/components/elements/textarea";
 import { ADDRESS, EMAIL, PHONE_DISPLAY, PHONE_TEL } from "@/constant/contact";
@@ -35,6 +42,49 @@ function FormField({
       </label>
       {children}
     </div>
+  );
+}
+
+const CONTACT_SUCCESS_MESSAGE =
+  "Thank you for your contact. Our team will get back to you shortly.";
+
+function ContactSuccessModal({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="gap-6 px-8 py-10 text-center sm:max-w-md">
+        <DialogHeader className="items-center gap-4 pr-0 text-center">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-kingfisher/10 text-kingfisher ring-8 ring-kingfisher/5">
+            <CheckCircle2 className="h-8 w-8" strokeWidth={1.75} />
+          </span>
+          <DialogTitle className="text-center text-2xl font-semibold tracking-tight">
+            Message received
+          </DialogTitle>
+          <DialogDescription className="max-w-sm text-center text-base leading-relaxed text-ink/65">
+            {CONTACT_SUCCESS_MESSAGE}
+          </DialogDescription>
+        </DialogHeader>
+
+        <p className="text-sm text-ink/45">
+          We aim to reply within one working day.
+        </p>
+
+        <Button
+          type="button"
+          variant="primary"
+          size="lg"
+          className="h-11 w-full rounded-xl"
+          onClick={() => onOpenChange(false)}
+        >
+          Close
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -81,9 +131,13 @@ export function ContactPageContent() {
     [searchParams]
   );
 
-  const [submitted, setSubmitted] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [consent, setConsent] = useState(false);
   const [subject, setSubject] = useState(
     () => (searchEnquiry ? buildEnquirySubject(searchEnquiry) : "")
   );
@@ -91,52 +145,50 @@ export function ContactPageContent() {
     () => (searchEnquiry ? buildEnquiryMessage(searchEnquiry) : "")
   );
 
+  function resetForm() {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPhone("");
+    setConsent(false);
+    setSubject(searchEnquiry ? buildEnquirySubject(searchEnquiry) : "");
+    setMessage(searchEnquiry ? buildEnquiryMessage(searchEnquiry) : "");
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
     setIsSubmitting(true);
 
-    const form = event.currentTarget;
-    const formData = new FormData(form);
+    const payload = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      subject: subject.trim(),
+      message: message.trim(),
+    };
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName: formData.get("firstName"),
-          lastName: formData.get("lastName"),
-          email: formData.get("email"),
-          phone: formData.get("phone"),
-          subject: formData.get("subject"),
-          message: formData.get("message"),
-        }),
-      });
+    resetForm();
+    setSuccessModalOpen(true);
+    setIsSubmitting(false);
 
-      const result = (await response.json()) as { error?: string };
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to send your message.");
-      }
-
-      setSubmitted(true);
-      form.reset();
-    } catch (submitError) {
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "Failed to send your message. Please try again."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    void fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
   }
 
   return (
     <main className="relative overflow-hidden bg-cloud pb-24 pt-28">
       <AmbientBackground />
+
+      <ContactSuccessModal
+        open={successModalOpen}
+        onOpenChange={setSuccessModalOpen}
+      />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <BlurFade static>
@@ -199,117 +251,108 @@ export function ContactPageContent() {
                 Fill in the form below and we&apos;ll respond to your enquiry promptly.
               </p>
 
-              {submitted ? (
-                <div
-                  className="mt-8 rounded-2xl border border-kingfisher/20 bg-kingfisher/5 px-5 py-4 text-sm leading-relaxed text-ink/75"
-                  role="status"
-                >
-                  Thank you for contacting Get A Ticket. We&apos;ve received your message and will
-                  be in touch shortly.
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-                  {error && (
-                    <div
-                      className="rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm leading-relaxed text-red-700"
-                      role="alert"
-                    >
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <FormField label="First Name" htmlFor="firstName">
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        type="text"
-                        required
-                        autoComplete="given-name"
-                        placeholder="First Name"
-                      />
-                    </FormField>
-                    <FormField label="Last Name" htmlFor="lastName">
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        type="text"
-                        required
-                        autoComplete="family-name"
-                        placeholder="Last Name"
-                      />
-                    </FormField>
-                  </div>
-
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <FormField label="Email Address" htmlFor="email">
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        autoComplete="email"
-                        placeholder="Email Address"
-                      />
-                    </FormField>
-                    <FormField label="Phone Number" htmlFor="phone">
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        required
-                        autoComplete="tel"
-                        placeholder="Phone Number"
-                      />
-                    </FormField>
-                  </div>
-
-                  <FormField label="Subject" htmlFor="subject">
+              <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <FormField label="First Name" htmlFor="firstName">
                     <Input
-                      id="subject"
-                      name="subject"
+                      id="firstName"
+                      name="firstName"
                       type="text"
                       required
-                      value={subject}
-                      onChange={(event) => setSubject(event.target.value)}
-                      placeholder="Subject"
+                      autoComplete="given-name"
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={(event) => setFirstName(event.target.value)}
                     />
                   </FormField>
-
-                  <FormField label="Your Message" htmlFor="message">
-                    <Textarea
-                      id="message"
-                      name="message"
+                  <FormField label="Last Name" htmlFor="lastName">
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
                       required
-                      value={message}
-                      onChange={(event) => setMessage(event.target.value)}
-                      placeholder="Message"
+                      autoComplete="family-name"
+                      placeholder="Last Name"
+                      value={lastName}
+                      onChange={(event) => setLastName(event.target.value)}
                     />
                   </FormField>
+                </div>
 
-                  <div className="flex flex-col gap-5 border-t border-line/80 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                    <label className="flex items-start gap-3 text-sm text-ink/70">
-                      <input
-                        type="checkbox"
-                        name="consent"
-                        required
-                        className="mt-0.5 h-4 w-4 rounded border-line text-kingfisher focus:ring-kingfisher/30"
-                      />
-                      <span>I confirm the information provided is accurate.</span>
-                    </label>
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <FormField label="Email Address" htmlFor="email">
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      placeholder="Email Address"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                    />
+                  </FormField>
+                  <FormField label="Phone Number" htmlFor="phone">
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      required
+                      autoComplete="tel"
+                      placeholder="Phone Number"
+                      value={phone}
+                      onChange={(event) => setPhone(event.target.value)}
+                    />
+                  </FormField>
+                </div>
 
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="lg"
-                      disabled={isSubmitting}
-                      className="h-11 min-w-[10.5rem] rounded-xl px-6 sm:ml-auto"
-                    >
-                      {isSubmitting ? "Sending..." : "Send Message"}
-                    </Button>
-                  </div>
-                </form>
-              )}
+                <FormField label="Subject" htmlFor="subject">
+                  <Input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    required
+                    value={subject}
+                    onChange={(event) => setSubject(event.target.value)}
+                    placeholder="Subject"
+                  />
+                </FormField>
+
+                <FormField label="Your Message" htmlFor="message">
+                  <Textarea
+                    id="message"
+                    name="message"
+                    required
+                    value={message}
+                    onChange={(event) => setMessage(event.target.value)}
+                    placeholder="Message"
+                  />
+                </FormField>
+
+                <div className="flex flex-col gap-5 border-t border-line/80 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                  <label className="flex items-start gap-3 text-sm text-ink/70">
+                    <input
+                      type="checkbox"
+                      name="consent"
+                      required
+                      checked={consent}
+                      onChange={(event) => setConsent(event.target.checked)}
+                      className="mt-0.5 h-4 w-4 rounded border-line text-kingfisher focus:ring-kingfisher/30"
+                    />
+                    <span>I confirm the information provided is accurate.</span>
+                  </label>
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="h-11 min-w-[10.5rem] rounded-xl px-6 sm:ml-auto"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </div>
+              </form>
             </section>
           </BlurFade>
 
