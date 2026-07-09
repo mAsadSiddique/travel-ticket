@@ -7,9 +7,10 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowLeftRight, Check, ChevronDown, Search } from "lucide-react";
 import { airports } from "@/constant/location-data";
 import { AirportCombobox } from "@/components/elements/airport-combobox";
-import { DateField, todayLocalISO } from "@/components/elements/date-field";
+import { DateField } from "@/components/elements/date-field";
 import { PassengerSelector, type PassengerCounts } from "@/components/elements/passenger-selector";
 import { Button } from "@/components/elements/button";
+import { useClientTodayISO } from "@/hooks/use-client-today";
 import { useSlidingIndicator } from "@/hooks/use-sliding-indicator";
 import { buildContactSearchUrl } from "@/utils/contact-redirect";
 
@@ -17,11 +18,12 @@ const CABIN_OPTIONS = ["Economy", "Premium Economy", "Business"];
 
 export function BookingCard() {
   const router = useRouter();
+  const today = useClientTodayISO();
   const [tripType, setTripType] = useState<"return" | "oneway">("return");
   const [origin, setOrigin] = useState(airports[0]);
   const [destination, setDestination] = useState(airports[10]);
-  const [departDate, setDepartDate] = useState(todayLocalISO());
-  const [returnDate, setReturnDate] = useState(todayLocalISO());
+  const [departDate, setDepartDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
   const [passengers, setPassengers] = useState<PassengerCounts>({
     adults: 1,
     children: 0,
@@ -32,6 +34,13 @@ export function BookingCard() {
   const tripIndicator = useSlidingIndicator(tripType, tripTabsRef);
 
   useEffect(() => {
+    if (!today) return;
+    setDepartDate((current) => current || today);
+    setReturnDate((current) => current || today);
+  }, [today]);
+
+  useEffect(() => {
+    if (!departDate || !returnDate) return;
     if (returnDate < departDate) {
       setReturnDate(departDate);
     }
@@ -43,6 +52,8 @@ export function BookingCard() {
   }
 
   function handleSearch() {
+    if (!departDate) return;
+
     const passengerCount =
       passengers.adults + passengers.children + passengers.infants;
 
@@ -163,7 +174,7 @@ export function BookingCard() {
           </div>
 
           <div className="px-3 py-1.5">
-            <DateField label="Depart" value={departDate} min={todayLocalISO()} onChange={setDepartDate} />
+            <DateField label="Depart" value={departDate} min={today || undefined} onChange={setDepartDate} />
           </div>
           <div className="border-t border-line px-3 py-1.5 sm:border-t-0">
             <DateField
@@ -184,6 +195,7 @@ export function BookingCard() {
           size="lg"
           variant="primary"
           onClick={handleSearch}
+          disabled={!departDate}
           className="h-11 w-full text-base"
         >
           <Search className="h-5 w-5" /> Search Flights

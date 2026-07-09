@@ -22,7 +22,9 @@ export const SITE_KEYWORDS = [
   "last minute travel deals",
 ];
 
-export const SITE_OG_IMAGE = "/logo-travel-removebg-preview.png";
+export const SITE_LOGO = "/logo-get-a-ticket-header.png";
+
+export const SITE_OG_IMAGE = SITE_LOGO;
 
 export const DEFAULT_PAGE_TITLE = `${SITE_NAME} — UK Flights & Holiday Booking`;
 

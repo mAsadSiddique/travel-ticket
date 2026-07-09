@@ -116,7 +116,9 @@ export function Footer() {
         </div>
 
         <div className="mt-14 border-t border-white/10 pt-6 text-center text-xs text-cloud/40">
-          <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
+          <p suppressHydrationWarning>
+            © {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

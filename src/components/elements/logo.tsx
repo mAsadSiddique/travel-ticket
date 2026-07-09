@@ -1,6 +1,7 @@
 import { cn } from "@/utils/utils";
+import { SITE_LOGO } from "@/constant/site-meta-data";
 
-export const LOGO_SRC = "/logo-travel-removebg-preview.png";
+export const LOGO_SRC = SITE_LOGO;
 
 type LogoProps = {
   className?: string;
@@ -10,9 +11,9 @@ export function Logo({ className }: LogoProps) {
   return (
     <img
       src={LOGO_SRC}
-      alt="Get A Ticket"
-      width={220}
-      height={68}
+      alt="Get a Ticket"
+      width={200}
+      height={100}
       className={cn("h-14 w-auto object-contain sm:h-16", className)}
     />
   );

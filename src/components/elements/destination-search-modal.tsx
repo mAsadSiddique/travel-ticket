@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -10,8 +10,9 @@ import {
 } from "@/components/elements/dialog";
 import { Button } from "@/components/elements/button";
 import { Input } from "@/components/elements/input";
-import { DateField, todayLocalISO } from "@/components/elements/date-field";
+import { DateField } from "@/components/elements/date-field";
 import { buildContactSearchUrl } from "@/utils/contact-redirect";
+import { useClientTodayISO } from "@/hooks/use-client-today";
 import type { Destination, Tour } from "@/constant/location-data";
 
 type DestinationSearchModalProps = {
@@ -28,12 +29,19 @@ export function DestinationSearchModal({
   tour = null,
 }: DestinationSearchModalProps) {
   const router = useRouter();
+  const today = useClientTodayISO();
   const [departure, setDeparture] = useState("");
   const [destinationQuery, setDestinationQuery] = useState("");
-  const [travelDate, setTravelDate] = useState(() => todayLocalISO());
-  const [returnDate, setReturnDate] = useState(() => todayLocalISO());
+  const [travelDate, setTravelDate] = useState("");
+  const [returnDate, setReturnDate] = useState("");
 
-  const minTravelDate = useMemo(() => todayLocalISO(), [open]);
+  useEffect(() => {
+    if (!open || !today) return;
+    setTravelDate((current) => current || today);
+    setReturnDate((current) => current || today);
+  }, [open, today]);
+
+  const minTravelDate = today || undefined;
 
   useEffect(() => {
     if (!open) return;
